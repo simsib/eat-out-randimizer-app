@@ -26,7 +26,7 @@ export default class App extends Component {
         super(props);
         this.state = {
             loading: true,
-            path: 'https://gist.githubusercontent.com/simsib/c7301eb56c14b35601ece8fff9e86bab/raw/3f3782e35d93a66a3fd3dd8b97a4a8870c983c4a/eat-out-randomizer-places.json'
+            places: []
         }
     }
 
@@ -36,25 +36,38 @@ export default class App extends Component {
             .then((responseJson) => {
                 this.setState({
                     loading: false,
-                    path: responseJson.places.join(', ')
+                    places: responseJson.places
                 });
             })
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    {this.state.loading.toString()}   ! Welcome to Eat Out Randomizer!
-                </Text>
-                <Text style={styles.welcome}>
-                    {this.state.path}
-                </Text>
-                <View style={{ flex: 1, paddingTop: 20 }}>
-                    <ActivityIndicator />
+        if (this.state.loading) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.welcome}>
+                        Welcome to Eat Out Randomizer!
+                    </Text>
+                    <View style={{ paddingTop: 20 }}>
+                        <ActivityIndicator />
+                    </View>
                 </View>
-            </View>
-        );
+            );
+        } else {
+            const places = this.state.places.map(place => {
+                return <Text key={place} style={styles.place}>{place}</Text>
+            })
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.welcome}>
+                        Welcome to Eat Out Randomizer!!!
+                </Text>
+                <View>
+                    {places}
+                </View>
+                </View>
+            );
+        }
     }
 }
 
@@ -69,6 +82,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
+    },
+    place: {
+        fontSize: 12,
+        textAlign: 'center',
+        margin: 5,
     },
     instructions: {
         textAlign: 'center',
