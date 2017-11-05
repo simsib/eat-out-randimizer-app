@@ -11,7 +11,9 @@ import {
     Text,
     View,
     Alert,
-    ActivityIndicator
+    ActivityIndicator,
+    ScrollView
+
 } from 'react-native';
 
 const instructions = Platform.select({
@@ -56,15 +58,15 @@ export default class App extends Component {
         } else {
             const places = this.state.places.map(place => {
                 return <Text key={place} style={styles.place}>{place}</Text>
-            })
+            });
             return (
-                <View style={styles.container}>
+                <View style={styles.container1}>
                     <Text style={styles.welcome}>
-                        Welcome to Eat Out Randomizer!!!
-                </Text>
-                <View>
+                       Welcome to Eat Out Randomizer
+                    </Text>
+                <ScrollView style={styles.container1}>
                     {places}
-                </View>
+                </ScrollView>
                 </View>
             );
         }
@@ -77,6 +79,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
+    }, 
+    container1: {
+        flex: 1,
     },
     welcome: {
         fontSize: 20,
@@ -84,9 +89,13 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     place: {
-        fontSize: 12,
-        textAlign: 'center',
+        fontSize: 40,
         margin: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        flex:1
     },
     instructions: {
         textAlign: 'center',
