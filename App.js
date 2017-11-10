@@ -62,7 +62,7 @@ export default class App extends Component {
             return (
                 <View style={styles.container}>
                     <Text style={styles.welcome}>
-                        Welcome to Eat Out Randomizer!
+                        Welcome to Eat Out Randomizer
                     </Text>
                     <View style={{ paddingTop: 20 }}>
                         <ActivityIndicator />
@@ -73,7 +73,7 @@ export default class App extends Component {
             return (
                 <View style={styles.container}>
                     <Text style={styles.welcome}>
-                        Welcome to Eat Out Randomizer!
+                        Welcome to Eat Out Randomizer
                     </Text>
                     <Button
                         style={styles.rollButton}
@@ -91,9 +91,6 @@ export default class App extends Component {
             });
             return (
                 <View style={styles.container1}>
-                    <Text style={styles.welcome}>
-                        Welcome to Eat Out Randomizer!
-                    </Text>
                     <FlatList
                         data={places}
                         renderItem={
