@@ -13,7 +13,8 @@ import {
     Alert,
     ActivityIndicator,
     ScrollView,
-    FlatList
+    FlatList,
+    Button
 
 } from 'react-native';
 
@@ -29,7 +30,9 @@ export default class App extends Component {
         super(props);
         this.state = {
             loading: true,
-            places: []
+            places: [],
+            rolled: false,
+            random: -1
         }
     }
 
@@ -44,6 +47,16 @@ export default class App extends Component {
             })
     }
 
+    roll() {
+        const random = Math.floor(Math.random() * this.state.places.length);
+        this.setState({ rolled: true, random });
+    }
+
+    reset() {
+        this.setState({ rolled: false, random: -1 });
+    }
+
+
     render() {
         if (this.state.loading) {
             return (
@@ -56,23 +69,42 @@ export default class App extends Component {
                     </View>
                 </View>
             );
+        } else if (!this.state.rolled) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.welcome}>
+                        Welcome to Eat Out Randomizer!
+                    </Text>
+                    <Button
+                        style={styles.rollButton}
+                        onPress={this.roll.bind(this)}
+                        title="Roll"
+                    />
+                </View>
+            )
         } else {
-            const places = this.state.places.map(place => {
+            const places = this.state.places.map((place, index) => {
                 return {
-                    key: place
+                    key: place,
+                    index
                 }
             });
             return (
-                <View style={styles.container2}>
+                <View style={styles.container1}>
                     <Text style={styles.welcome}>
                         Welcome to Eat Out Randomizer!
                     </Text>
                     <FlatList
                         data={places}
                         renderItem={
-                            ({ item }) => <Text style={styles.place}>{item.key}</Text>
+                            ({ item }) => <Text style={item.index === this.state.random ? styles.winnerPlace : styles.place}>{item.key}</Text>
                         }
                     ></FlatList>
+                    <Button
+                        style={styles.rollButton}
+                        onPress={this.reset.bind(this)}
+                        title="Reset"
+                    />
                 </View>
             );
         }
@@ -83,8 +115,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
+        margin: 20
     },
     container1: {
         flex: 1,
@@ -95,17 +127,40 @@ const styles = StyleSheet.create({
         margin: 10
     },
     place: {
-        fontSize: 40,
+        fontSize: 25,
         margin: 5,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        flex: 1
+        flex: 1,
+        width: '100%',
+        textAlign: 'center'
+        
+    },
+    winnerPlace: {
+        fontSize: 50,
+        margin: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        flex: 1,
+        borderStyle: 'solid',
+        borderColor: 'gold',
+        backgroundColor: 'gold',
+        borderWidth: 1,
+        width: '100%',
+        textAlign: 'center'
     },
     instructions: {
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,
+    },
+    rollButton: {
+        padding: 20,
+        flexDirection: 'row',
+        flex: 1
     }
 });
