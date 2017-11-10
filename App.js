@@ -12,15 +12,16 @@ import {
     View,
     Alert,
     ActivityIndicator,
-    ScrollView
+    ScrollView,
+    FlatList
 
 } from 'react-native';
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
+        'Cmd+D or shake for dev menu',
     android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+        'Shake or press menu button for dev menu',
 });
 
 export default class App extends Component {
@@ -57,16 +58,21 @@ export default class App extends Component {
             );
         } else {
             const places = this.state.places.map(place => {
-                return <Text key={place} style={styles.place}>{place}</Text>
+                return {
+                    key: place
+                }
             });
             return (
-                <View style={styles.container1}>
+                <View style={styles.container2}>
                     <Text style={styles.welcome}>
-                       Welcome to Eat Out Randomizer
+                        Welcome to Eat Out Randomizer!
                     </Text>
-                <ScrollView style={styles.container1}>
-                    {places}
-                </ScrollView>
+                    <FlatList
+                        data={places}
+                        renderItem={
+                            ({ item }) => <Text style={styles.place}>{item.key}</Text>
+                        }
+                    ></FlatList>
                 </View>
             );
         }
@@ -79,14 +85,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
-    }, 
+    },
     container1: {
         flex: 1,
     },
     welcome: {
         fontSize: 20,
         textAlign: 'center',
-        margin: 10,
+        margin: 10
     },
     place: {
         fontSize: 40,
@@ -95,11 +101,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        flex:1
+        flex: 1
     },
     instructions: {
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,
-    },
+    }
 });
