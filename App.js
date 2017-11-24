@@ -14,7 +14,8 @@ import {
     ActivityIndicator,
     ScrollView,
     FlatList,
-    Button
+    Button,
+    TouchableNativeFeedback
 
 } from 'react-native';
 
@@ -32,7 +33,8 @@ export default class App extends Component {
             loading: true,
             places: [],
             rolled: false,
-            random: -1
+            random: -1,
+            holding: false
         }
     }
 
@@ -42,9 +44,9 @@ export default class App extends Component {
             .then((responseJson) => {
                 this.setState({
                     loading: false,
-                    places: responseJson.places
+                    places: responseJson.places.sort()
                 });
-            })
+            });
     }
 
     roll() {
@@ -56,6 +58,24 @@ export default class App extends Component {
         this.setState({ rolled: false, random: -1 });
     }
 
+    keepRoling() {
+        const random = Math.floor(Math.random() * this.state.places.length);
+        this.setState({ random });
+    }
+
+    onHold() {
+        this.setState({ holding: true });
+        setTimeout(() => {
+            this.keepRoling();
+            if (this.state.holding) {
+                this.onHold();
+            }
+        }, 5);
+    }
+
+    onRelease() {
+        this.setState({ holding: false });
+    }
 
     render() {
         if (this.state.loading) {
@@ -75,11 +95,12 @@ export default class App extends Component {
                     <Text style={styles.welcome}>
                         Welcome to Eat Out Randomizer
                     </Text>
-                    <Button
-                        style={styles.rollButton}
-                        onPress={this.roll.bind(this)}
-                        title="Roll"
-                    />
+                    <TouchableNativeFeedback
+                        onPress={this.roll.bind(this)}>
+                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
+                            <Text style={styles.customRollButton}>roll</Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
             )
         } else {
@@ -97,11 +118,19 @@ export default class App extends Component {
                             ({ item }) => <Text style={item.index === this.state.random ? styles.winnerPlace : styles.place}>{item.key}</Text>
                         }
                     ></FlatList>
-                    <Button
-                        style={styles.rollButton}
-                        onPress={this.reset.bind(this)}
-                        title="Reset"
-                    />
+                    <TouchableNativeFeedback
+                        onPressIn={this.onHold.bind(this)}
+                        onPressOut={this.onRelease.bind(this)}>
+                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
+                            <Text style={styles.holdButton}>hold to keep rolling</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback
+                        onPress={this.reset.bind(this)}>
+                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
+                            <Text style={styles.holdButton}>reset</Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
             );
         }
@@ -133,7 +162,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         textAlign: 'center'
-        
+
     },
     winnerPlace: {
         fontSize: 50,
@@ -159,5 +188,27 @@ const styles = StyleSheet.create({
         padding: 20,
         flexDirection: 'row',
         flex: 1
+    },
+    holdButton: {
+        padding: 15,
+        fontSize: 15,
+        color: 'white',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        textAlign: 'center'
+    },
+    customRollButton: {
+        padding: 10,
+        fontSize: 20,
+        color: 'white',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        textAlign: 'center'
     }
 });
