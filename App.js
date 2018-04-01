@@ -52,7 +52,7 @@ export default class App extends Component {
     componentDidUpdate() {
         if (this.state.rolled && this.state.random >= 0) {
             setTimeout(() => {
-                this.flatListRef.scrollToIndex({ animated: true, index: this.state.random, viewPosition: 0 });
+                this.flatListRef.scrollToIndex({ animated: true, index: this.state.random, viewPosition: 0.5 });
             }, 0)
         }
     }
@@ -114,6 +114,7 @@ export default class App extends Component {
             return (
                 <View style={styles.container1}>
                     <FlatList
+                        style={styles.flatlist}
                         data={places}
                         renderItem={
                             ({ item }) => <Text style={item.index === this.state.random ? styles.winnerPlace : styles.place}>{item.key}</Text>
@@ -122,7 +123,7 @@ export default class App extends Component {
                         onRefresh={this.reset2.bind(this)}
                         refreshing={false}
                         getItemLayout={(data, index) => (
-                            { length: 30, offset: 30 * index, index }
+                            { length: 35, offset: (35 * index) + 5, index }
                         )}
                     ></FlatList>
                     <TouchableNativeFeedback
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     container1: {
+        margin: 0,
         flex: 1,
     },
     welcome: {
@@ -153,20 +155,20 @@ const styles = StyleSheet.create({
         margin: 10
     },
     place: {
-        fontSize: 25,
+        fontSize: 20,
         margin: 5,
+        padding: 0,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
         flex: 1,
         width: '100%',
-        textAlign: 'center'
-
+        textAlign: 'center',
     },
     winnerPlace: {
-        fontSize: 50,
-        margin: 5,
+        fontSize: 45,
+        margin: 0,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -211,5 +213,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         textAlign: 'center'
     },
-    buttonWrapper: { width: '100%', height: 50, backgroundColor: '#117bf3' }
+    buttonWrapper: { width: '100%', height: 50, backgroundColor: '#117bf3' },
+    flatlist: { marginTop: 0, marginBottom: 0 }
 });
