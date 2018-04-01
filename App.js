@@ -27,7 +27,7 @@ const instructions = Platform.select({
 });
 
 export default class App extends Component {
-    flatListRef = {};
+    flatListRef;
     constructor(props) {
         super(props);
         this.state = {
@@ -49,10 +49,17 @@ export default class App extends Component {
             });
     }
 
+    componentDidUpdate() {
+        if (this.state.rolled && this.state.random >= 0) {
+            // const res = typeof this.flatListRef;
+            setTimeout(() => {
+            this.flatListRef.scrollToIndex({ animated: true, index: this.state.random, viewPosition: 0 });
+        }, 0)
+        }
+    }
+
     roll() {
-        // const random = Math.floor(Math.random() * this.state.places.length);
-        const randomness = this.getRandomArray();
-        this.setState({rolled: true, random: randomness.pop() });
+        this.setState({ rolled: true, random: this.getRandomArray().pop() });
     }
 
     getRandomArray(times = 10) {
@@ -65,7 +72,10 @@ export default class App extends Component {
     }
 
     reset() {
-        // this.flatListRef.scrollToEnd();        
+        this.roll();
+    }
+
+    reset2() {
         this.setState({ rolled: false, random: -1 });
     }
 
@@ -110,11 +120,16 @@ export default class App extends Component {
                             ({ item }) => <Text style={item.index === this.state.random ? styles.winnerPlace : styles.place}>{item.key}</Text>
                         }
                         ref={(ref) => { this.flatListRef = ref; }}
+                        onRefresh={this.reset2.bind(this)}
+                        refreshing={false}
+                        getItemLayout={(data, index) => (
+                            { length: 30, offset: 30 * index, index }
+                        )}
                     ></FlatList>
                     <TouchableNativeFeedback
                         onPress={this.reset.bind(this)}>
                         <View style={styles.buttonWrapper}>
-                            <Text style={styles.holdButton}>reset</Text>
+                            <Text style={styles.holdButton}>roll</Text>
                         </View>
                     </TouchableNativeFeedback>
                 </View>
