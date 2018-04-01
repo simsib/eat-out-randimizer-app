@@ -27,6 +27,7 @@ const instructions = Platform.select({
 });
 
 export default class App extends Component {
+    flatListRef = {};
     constructor(props) {
         super(props);
         this.state = {
@@ -64,6 +65,7 @@ export default class App extends Component {
     }
 
     reset() {
+        // this.flatListRef.scrollToEnd();        
         this.setState({ rolled: false, random: -1 });
     }
 
@@ -107,6 +109,7 @@ export default class App extends Component {
                         renderItem={
                             ({ item }) => <Text style={item.index === this.state.random ? styles.winnerPlace : styles.place}>{item.key}</Text>
                         }
+                        ref={(ref) => { this.flatListRef = ref; }}
                     ></FlatList>
                     <TouchableNativeFeedback
                         onPress={this.reset.bind(this)}>
