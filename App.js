@@ -51,7 +51,6 @@ export default class App extends Component {
 
     componentDidUpdate() {
         if (this.state.rolled && this.state.random >= 0) {
-            // const res = typeof this.flatListRef;
             setTimeout(() => {
                 this.flatListRef.scrollToIndex({ animated: true, index: this.state.random, viewPosition: 0 });
             }, 0)
