@@ -34,7 +34,6 @@ export default class App extends Component {
             places: [],
             rolled: false,
             random: -1,
-            holding: false
         }
     }
 
@@ -50,31 +49,22 @@ export default class App extends Component {
     }
 
     roll() {
-        const random = Math.floor(Math.random() * this.state.places.length);
-        this.setState({ rolled: true, random });
+        // const random = Math.floor(Math.random() * this.state.places.length);
+        const randomness = this.getRandomArray();
+        this.setState({rolled: true, random: randomness.pop() });
+    }
+
+    getRandomArray(times = 10) {
+        const resultIds = [];
+        for (let i = 0; i < times; i++) {
+            const element = Math.floor(Math.random() * this.state.places.length)
+            resultIds.push(element);
+        }
+        return resultIds;
     }
 
     reset() {
         this.setState({ rolled: false, random: -1 });
-    }
-
-    keepRoling() {
-        const random = Math.floor(Math.random() * this.state.places.length);
-        this.setState({ random });
-    }
-
-    onHold() {
-        this.setState({ holding: true });
-        setTimeout(() => {
-            this.keepRoling();
-            if (this.state.holding) {
-                this.onHold();
-            }
-        }, 5);
-    }
-
-    onRelease() {
-        this.setState({ holding: false });
     }
 
     render() {
@@ -97,7 +87,7 @@ export default class App extends Component {
                     </Text>
                     <TouchableNativeFeedback
                         onPress={this.roll.bind(this)}>
-                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
+                        <View style={styles.buttonWrapper}>
                             <Text style={styles.customRollButton}>roll</Text>
                         </View>
                     </TouchableNativeFeedback>
@@ -119,15 +109,8 @@ export default class App extends Component {
                         }
                     ></FlatList>
                     <TouchableNativeFeedback
-                        onPressIn={this.onHold.bind(this)}
-                        onPressOut={this.onRelease.bind(this)}>
-                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
-                            <Text style={styles.holdButton}>hold to keep rolling</Text>
-                        </View>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback
                         onPress={this.reset.bind(this)}>
-                        <View style={{ width: '100%', height: 50, backgroundColor: '#117bf3' }}>
+                        <View style={styles.buttonWrapper}>
                             <Text style={styles.holdButton}>reset</Text>
                         </View>
                     </TouchableNativeFeedback>
@@ -210,5 +193,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         textAlign: 'center'
-    }
+    },
+    buttonWrapper: { width: '100%', height: 50, backgroundColor: '#117bf3' }
 });
